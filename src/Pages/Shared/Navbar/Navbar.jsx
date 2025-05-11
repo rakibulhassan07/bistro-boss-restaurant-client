@@ -40,8 +40,8 @@ const Navbar = () => {
           </ul>
         </div>
         <Link to="/" className="flex flex-col items-start">
-          <span className="text-xl font-bold">BISTRO BOSS</span>
-          <span className="text-sm tracking-widest">RESTAURANT</span>
+          <span className="text-xl font-bold">THE PIZZA</span>
+          <span className="text-sm tracking-widest">GARDEN</span>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
