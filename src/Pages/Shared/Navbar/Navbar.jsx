@@ -5,7 +5,7 @@ const Navbar = () => {
   const navItems = (
     <>
       <li><Link to="/" className="font-medium">HOME</Link></li>
-      <li><Link to="/contact-us" className="font-medium">CONTACT US</Link></li>
+      <li><Link to="/contact" className="font-medium">CONTACT US</Link></li>
       <li><Link to="/dashboard" className="font-medium">DASHBOARD</Link></li>
       <li><Link to="/menu" className="font-medium">OUR MENU</Link></li>
       <li><Link to="/shop" className="font-medium">OUR SHOP</Link></li>
