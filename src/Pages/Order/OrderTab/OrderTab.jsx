@@ -34,11 +34,12 @@ const OrderTab = ({ title }) => {
         className="mySwiper"
         spaceBetween={30}
         style={{
-          paddingBottom: "60px", // Add space for pagination
+          paddingBottom: "60px", // Add space for pagination pages 
+  
         }}
       >
         {slides.map((slideItems, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={index}> 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
               {slideItems.map((item) => (
                 <FoodCard key={item._id} item={item}></FoodCard>
