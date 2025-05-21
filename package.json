@@ -12,6 +12,7 @@
   "dependencies": {
     "@smastrom/react-rating": "^1.5.0",
     "@tailwindcss/vite": "^4.1.6",
+    "firebase": "^11.8.0",
     "localforage": "^1.10.0",
     "match-sorter": "^8.0.1",
     "react": "^18.3.1",
