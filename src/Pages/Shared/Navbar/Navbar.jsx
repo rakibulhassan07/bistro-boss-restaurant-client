@@ -50,13 +50,12 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <Link to="/sign-out" className="flex items-center gap-1">
-          <span className="font-medium">SIGN OUT</span>
-          <div className="avatar">
-            <div className="w-8 rounded-full ring ring-white">
-              <img src={MdOutlineAccountCircle} alt="User" />
-            </div>
-          </div>
+        <Link to="/login" className="flex items-center gap-1">
+          <span className="font-medium">LogIn</span>
+          <iframe
+            className="w-12 h-12 md:w-16 md:h-16"
+            src="https://lottie.host/embed/21c0f04d-247e-460b-921b-f165217a9ef3/Mov0qGZhSD.json"
+          ></iframe>
         </Link>
         <div className="indicator ml-2">
           <span className="indicator-item badge badge-secondary bg-red-600 border-none">2</span> 
