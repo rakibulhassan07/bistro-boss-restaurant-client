@@ -1,7 +1,22 @@
-import React from "react";
+import React, { use, useContext } from "react";
 import { Link } from "react-router-dom";
 import { MdOutlineAccountCircle } from "react-icons/md";
+import { AuthContext } from "../../../provider/AuthProvider";
 const Navbar = () => {
+  const {user,logOut}= useContext(AuthContext);
+
+  const handleLogOut = () => {
+    logOut()
+    .then(() => {
+      // Sign-out successful.
+      console.log("User logged out successfully");
+    })
+    .catch((error) => {
+      // An error happened.
+      console.error("Error logging out:", error);
+    });
+
+  }
   const navItems = (
     <>
       <li><Link to="/" className="font-medium">HOME</Link></li>
@@ -50,13 +65,18 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login" className="flex items-center gap-1">
-          <span className="font-medium">LogIn</span>
-          <iframe
+        
+        {
+          user ? <><button onClick={handleLogOut} className="flex items-center gap-1">
+          <span className="font-medium">LogOut</span>  
+        </button></> : <><Link to="/login" className="flex items-center gap-1">
+          <span className="font-medium">LogIn</span>  
+        </Link></>
+        }
+        <iframe
             className="w-12 h-12 md:w-16 md:h-16"
             src="https://lottie.host/embed/21c0f04d-247e-460b-921b-f165217a9ef3/Mov0qGZhSD.json"
           ></iframe>
-        </Link>
         <div className="indicator ml-2">
           <span className="indicator-item badge badge-secondary bg-red-600 border-none">2</span> 
           <button className="btn btn-ghost">
