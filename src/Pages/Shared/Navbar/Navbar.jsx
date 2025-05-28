@@ -1,22 +1,42 @@
-import React, { use, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { MdOutlineAccountCircle } from "react-icons/md";
+import { motion } from "framer-motion";
 import { AuthContext } from "../../../provider/AuthProvider";
 const Navbar = () => {
-  const {user,logOut}= useContext(AuthContext);
+ const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const { user, logOut } = useContext(AuthContext);
+  const dropdownRef = useRef(null);
 
-  const handleLogOut = () => {
-    logOut()
-    .then(() => {
-      // Sign-out successful.
-      console.log("User logged out successfully");
-    })
-    .catch((error) => {
-      // An error happened.
-      console.error("Error logging out:", error);
-    });
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-  }
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const handleSingOut = () => {
+    logOut();
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Active link style
+  const activeStyle = "bg-amber-100 text-amber-800 font-semibold";
   const navItems = (
     <>
       <li><Link to="/" className="font-medium">HOME</Link></li>
@@ -64,28 +84,70 @@ const Navbar = () => {
           {navItems}
         </ul>
       </div>
-      <div className="navbar-end">
-        
-        {
-          user ? <><button onClick={handleLogOut} className="flex items-center gap-1">
-          <span className="font-medium">LogOut</span>  
-        </button></> : <><Link to="/login" className="flex items-center gap-1">
-          <span className="font-medium">LogIn</span>  
-        </Link></>
-        }
-        <iframe
-            className="w-12 h-12 md:w-16 md:h-16"
-            src="https://lottie.host/embed/21c0f04d-247e-460b-921b-f165217a9ef3/Mov0qGZhSD.json"
-          ></iframe>
-        <div className="indicator ml-2">
-          <span className="indicator-item badge badge-secondary bg-red-600 border-none">2</span> 
-          <button className="btn btn-ghost">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </button>
-        </div>
-      </div>
+      <div className="flex items-center gap-4 flex-none">
+            {user && user?.email ? (
+              <div className="relative" ref={dropdownRef}>
+                <div 
+                  className="cursor-pointer"
+                  onClick={toggleProfileDropdown}
+                >
+                  <img
+                    src={user?.photoURL}
+                    alt="User Profile"
+                    className="w-10 h-10 rounded-full object-cover hover:ring-2 hover:ring-amber-400"
+                  />
+                  <p className="text-amber-800">{user.displayName}</p>
+                </div>
+                
+                {/* Profile dropdown menu */}
+                {isProfileDropdownOpen && (
+                  <motion.div 
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <NavLink 
+                      to="/MyProfile" 
+                      className="block px-4 py-2 text-amber-800 hover:bg-amber-100"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      My Profile
+                    </NavLink>
+                    <div className="border-t border-gray-100"></div>
+                    <button
+                      onClick={() => {
+                        handleSingOut();
+                        setIsProfileDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-amber-800 hover:bg-amber-100"
+                    >
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+            ) : (
+              <iframe
+                className="w-12 h-12 md:w-16 md:h-16"
+                src="https://lottie.host/embed/21c0f04d-247e-460b-921b-f165217a9ef3/Mov0qGZhSD.json"
+                referrerPolicy="no-referrer"
+              ></iframe>
+            )}
+            
+            {user ? (
+              <button onClick={handleSingOut} className="hidden btn bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 border-0 shadow-md">
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/Login"
+                className="btn bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 border-0 shadow-md"
+              >
+                Login
+              </Link>
+            )}
+          </div>
     </div>
   );
 };

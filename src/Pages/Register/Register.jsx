@@ -1,74 +1,147 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { useForm } from "react-hook-form";
-import { Helmet } from "react-helmet-async";
-import { toast, ToastContainer } from "react-toastify";
+import React, { useContext, useState } from "react";
+import { motion } from "framer-motion";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GiCroissant, GiSlicedBread } from "react-icons/gi";
+import { FaEye, FaEyeSlash, FaBreadSlice, FaCookieBite, FaCloudUploadAlt } from "react-icons/fa";
+import { MdOutlineBakeryDining } from "react-icons/md";
+import { TbFidgetSpinner } from "react-icons/tb";
+import { BsPersonFill } from "react-icons/bs";
+import { FaPhoneAlt } from "react-icons/fa";
+import { useForm } from "react-hook-form";
 import { AuthContext } from "../../provider/AuthProvider";
 import img from "../../assets/others/authentication1.png";
 
 const Register = () => {
   const { createUser, updateUserProfile } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageName, setImageName] = useState("No file chosen");
+  const [imagePreview, setImagePreview] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showPass = () => setVisible((prev) => !prev);
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors }
   } = useForm();
-  const navigate = useNavigate();
+  
+  // Image upload with imagebb api
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    setImageName(file.name);
+    
+    // Preview image
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+    
+    const formData = new FormData();
+    formData.append("image", file);
+    
+    // Replace YOUR_IMGBB_API_KEY with your actual ImgBB API key
+    const url = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_IMGBB_API_KEY
+    }`;
 
-  const onSubmit = (data) => {
-    createUser(data.email, data.password)
-      .then((result) => {
-        const user = result.user;
-        updateUserProfile(data.name, data.photoUrl)
-          .then(() => {
-            console.log("User profile updated:", user);
-
-            // Trigger success toast
-            toast.success("User Created Successfully!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
-
-            reset(); // Clear the form
-            setTimeout(() => navigate("/"), 2000); // Navigate after 2 seconds
-          })
-          .catch((error) => {
-            console.error("Error updating user profile:", error);
-            toast.error(`Profile update failed: ${error.message}`, {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
-          });
-      })
-      .catch((error) => {
-        console.error("Error creating user:", error);
-        toast.error(`User creation failed: ${error.message}`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+    try {
+      setLoading(true);
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
       });
+      const data = await response.json();
+      if (data.success) {
+        setImageUrl(data.data.url);
+        
+        toast.success("Image uploaded successfully!");
+      } else {
+        toast.success("Image uploaded successfully!");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Handle form submission
+  const onsubmit = async (data) => {
+    console.log(imageUrl)
+    try {
+      setLoading(true);
+      await createUser(data.email, data.password)
+        .then((result) => {
+          updateUserProfile(data.name, imageUrl)
+            .then(() => {
+              const saveUser = {
+                name: data.name,
+                photo: imageUrl,
+                email: data.email,
+                phone: data.phone,
+                password: data.password,
+                role: "customer",
+              };
+              fetch("http://localhost:5000/users", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(saveUser),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.insertedId) {
+                    reset();
+                    Swal.fire("User Created Successfully");
+                    navigate("/");
+                  }
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          toast.success("Registration Successful!", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          setTimeout(() => {
+            const redirectPath = location.state?.from?.pathname || "/";
+            navigate(redirectPath, { replace: true });
+          }, 3000);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("mail is already exist", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          setLoading(false);
+        });
+
+      // Changed to 3000ms to match toast duration
+    } catch (error) {
+      toast.error("Login failed! please enter valid password and email");
+    }
+  }
 
   return (
     <>
-      <Helmet>
-        <title>THE PIZZA GARDEN | Register</title>
-      </Helmet>
       <ToastContainer />
       <div
         className="min-h-screen bg-gray-50 flex items-center justify-center p-4"
@@ -80,16 +153,16 @@ const Register = () => {
               <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
                 Sign Up
               </h2>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={handleSubmit(onsubmit)} className="space-y-6">
                 {/* Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Name
+                    Full Name
                   </label>
                   <input
                     type="text"
                     {...register("name", { required: true })}
-                    placeholder="Type here"
+                    placeholder="Name"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                   />
                   {errors.name && (
@@ -98,23 +171,46 @@ const Register = () => {
                     </p>
                   )}
                 </div>
-                {/* Photo */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Photo URL
+
+                {/* Photo*/}
+                <div className="form-control mt-4">
+                  <label className="label">
+                    <span className="block text-sm font-medium text-gray-700 mb-2">
+                      Profile Image
+                    </span>
                   </label>
-                  <input
-                    type="text"
-                    {...register("photoUrl", { required: true })}
-                    placeholder="Photo URL"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
-                  />
-                  {errors.photoUrl && (
-                    <p className="text-red-500 text-sm mt-1">
-                      Photo URL is required.
-                    </p>
-                  )}
+                  <div className="flex flex-col space-y-2">
+                    {/* Image preview */}
+                    {imagePreview && (
+                      <div className="w-full flex justify-center mb-2">
+                        <img 
+                          src={imagePreview} 
+                          alt="Profile preview" 
+                          className="h-24 w-24 object-cover rounded-full border-2 border-orange-300"
+                        />
+                      </div>
+                    )}
+                    
+                    {/* File upload UI */}
+                    <div className="flex items-center">
+                      <label className="flex-1 flex items-center justify-center p-2 bg-orange-50 border border-orange-300 border-dashed rounded-l-md hover:bg-orange-100 cursor-pointer transition-colors">
+                        <FaCloudUploadAlt className="mr-2 text-orange-600 text-xl" />
+                        <span className="text-orange-700">Choose file</span>
+                        <input 
+                          type="file" 
+                          name="profileImage" 
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageUpload}
+                        />
+                      </label>
+                      <div className="bg-orange-50 border border-orange-300 border-l-0 rounded-r-md p-2 text-orange-700 text-sm overflow-hidden whitespace-nowrap text-ellipsis max-w-[200px]">
+                        {imageName}
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -123,7 +219,7 @@ const Register = () => {
                   <input
                     type="email"
                     {...register("email", { required: true })}
-                    placeholder="Type here"
+                    placeholder="abc@Gmail.com"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                   />
                   {errors.email && (
@@ -132,29 +228,64 @@ const Register = () => {
                     </p>
                   )}
                 </div>
+
+                {/* Phone Number */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    {...register("phone", { required: true })}
+                    placeholder="+880 "
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Phone number is required.
+                    </p>
+                  )}
+                </div>
+
                 {/* Password */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Password
                   </label>
-                  <input
-                    type="password"
-                    {...register("password", { required: true, minLength: 6 })}
-                    placeholder="Enter your password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
-                  />
+                  <div className="relative">
+                    <input
+                      type={visible ? "text" : "password"}
+                      {...register("password", { required: true })}
+                      placeholder="Enter your password"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all pr-12"
+                    />
+                    <button
+                      type="button"
+                      onClick={showPass}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 hover:text-gray-800 focus:outline-none"
+                    >
+                      {visible ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-1">
-                      Password must be at least 6 characters long.
+                      Password is required.
                     </p>
                   )}
                 </div>
+
                 {/* Submit Button */}
-                <input
-                  className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                <button
                   type="submit"
-                  value="Sign Up"
-                />
+                  className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <TbFidgetSpinner className="animate-spin h-5 w-5" />
+                  ) : (
+                    "Sign Up"
+                  )}
+                </button>
               </form>
               <p className="text-center mt-4">
                 <span className="text-sm text-gray-600">
