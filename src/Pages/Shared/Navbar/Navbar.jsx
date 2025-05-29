@@ -1,13 +1,17 @@
 import React, { use, useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { MdOutlineAccountCircle } from "react-icons/md";
+import { MdOutlineAccountCircle, MdShoppingCart } from "react-icons/md";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../provider/AuthProvider";
+import useCart from "../../../Hook/useCart";
+
 const Navbar = () => {
- const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]); // Cart state
   const { user, logOut } = useContext(AuthContext);
   const dropdownRef = useRef(null);
+  const [cart]=useCart();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,6 +23,11 @@ const Navbar = () => {
 
   const handleSingOut = () => {
     logOut();
+  };
+
+  // Get cart item count
+  const getCartItemCount = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
   // Close dropdown when clicking outside
@@ -35,6 +44,19 @@ const Navbar = () => {
     };
   }, []);
 
+  // Load cart from localStorage on component mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem('pizzaCart');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage whenever cartItems changes
+  useEffect(() => {
+    localStorage.setItem('pizzaCart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
   // Active link style
   const activeStyle = "bg-amber-100 text-amber-800 font-semibold";
   const navItems = (
@@ -44,6 +66,13 @@ const Navbar = () => {
       <li><Link to="/dashboard" className="font-medium">DASHBOARD</Link></li>
       <li><Link to="/menu" className="font-medium">OUR MENU</Link></li>
       <li><Link to="/order/salad" className="font-medium">ORDER FOOD</Link></li>
+      {/* Shopping Cart */}
+        <Link to="/dashboard/cart" className="relative">
+          <div className="btn btn-ghost btn-circle">
+            <MdShoppingCart className="h-6 w-6" />
+          </div>
+           <div className="badge bg-red-500 relative right-5 bottom-3">+{cart.length}</div>
+        </Link>
     </>
   );
 
@@ -85,69 +114,71 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="flex items-center gap-4 flex-none">
-            {user && user?.email ? (
-              <div className="relative" ref={dropdownRef}>
-                <div 
-                  className="cursor-pointer"
-                  onClick={toggleProfileDropdown}
-                >
-                  <img
-                    src={user?.photoURL}
-                    alt="User Profile"
-                    className="w-10 h-10 rounded-full object-cover hover:ring-2 hover:ring-amber-400"
-                  />
-                  <p className="text-amber-800">{user.displayName}</p>
-                </div>
-                
-                {/* Profile dropdown menu */}
-                {isProfileDropdownOpen && (
-                  <motion.div 
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <NavLink 
-                      to="/MyProfile" 
-                      className="block px-4 py-2 text-amber-800 hover:bg-amber-100"
-                      onClick={() => setIsProfileDropdownOpen(false)}
-                    >
-                      My Profile
-                    </NavLink>
-                    <div className="border-t border-gray-100"></div>
-                    <button
-                      onClick={() => {
-                        handleSingOut();
-                        setIsProfileDropdownOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-amber-800 hover:bg-amber-100"
-                    >
-                      Logout
-                    </button>
-                  </motion.div>
-                )}
-              </div>
-            ) : (
-              <iframe
-                className="w-12 h-12 md:w-16 md:h-16"
-                src="https://lottie.host/embed/21c0f04d-247e-460b-921b-f165217a9ef3/Mov0qGZhSD.json"
-                referrerPolicy="no-referrer"
-              ></iframe>
-            )}
+        
+
+        {user && user?.email ? (
+          <div className="relative" ref={dropdownRef}>
+            <div 
+              className="cursor-pointer"
+              onClick={toggleProfileDropdown}
+            >
+              <img
+                src={user?.photoURL}
+                alt="User Profile"
+                className="w-10 h-10 rounded-full object-cover hover:ring-2 hover:ring-amber-400"
+              />
+              <p className="text-amber-800">{user.displayName}</p>
+            </div>
             
-            {user ? (
-              <button onClick={handleSingOut} className="hidden btn bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 border-0 shadow-md">
-                Logout
-              </button>
-            ) : (
-              <Link
-                to="/Login"
-                className="btn bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 border-0 shadow-md"
+            {/* Profile dropdown menu */}
+            {isProfileDropdownOpen && (
+              <motion.div 
+                className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                Login
-              </Link>
+                <NavLink 
+                  to="/MyProfile" 
+                  className="block px-4 py-2 text-amber-800 hover:bg-amber-100"
+                  onClick={() => setIsProfileDropdownOpen(false)}
+                >
+                  My Profile
+                </NavLink>
+                <div className="border-t border-gray-100"></div>
+                <button
+                  onClick={() => {
+                    handleSingOut();
+                    setIsProfileDropdownOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-amber-800 hover:bg-amber-100"
+                >
+                  Logout
+                </button>
+              </motion.div>
             )}
           </div>
+        ) : (
+          <iframe
+            className="w-12 h-12 md:w-16 md:h-16"
+            src="https://lottie.host/embed/21c0f04d-247e-460b-921b-f165217a9ef3/Mov0qGZhSD.json"
+            referrerPolicy="no-referrer"
+          ></iframe>
+        )}
+        
+        {user ? (
+          <button onClick={handleSingOut} className="hidden btn bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 border-0 shadow-md">
+            Logout
+          </button>
+        ) : (
+          <Link
+            to="/Login"
+            className="btn bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 border-0 shadow-md"
+          >
+            Login
+          </Link>
+        )}
+      </div>
     </div>
   );
 };

@@ -103,6 +103,7 @@ const Register = () => {
                     Swal.fire("User Created Successfully");
                     navigate("/");
                   }
+                  
                 });
             })
             .catch((err) => {
