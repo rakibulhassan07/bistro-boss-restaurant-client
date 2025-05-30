@@ -12,9 +12,12 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../provider/AuthProvider";
 import img from "../../assets/others/authentication1.png";
+import useAxiosPublic from "../../Hook/useAxiosPublic";
+import Swal from "sweetalert2";
 
 const Register = () => {
-  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
+  const { createUser, updateUserProfile, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -48,7 +51,6 @@ const Register = () => {
     const formData = new FormData();
     formData.append("image", file);
     
-    // Replace YOUR_IMGBB_API_KEY with your actual ImgBB API key
     const url = `https://api.imgbb.com/1/upload?key=${
       import.meta.env.VITE_IMGBB_API_KEY
     }`;
@@ -62,10 +64,9 @@ const Register = () => {
       const data = await response.json();
       if (data.success) {
         setImageUrl(data.data.url);
-        
         toast.success("Image uploaded successfully!");
       } else {
-        toast.success("Image uploaded successfully!");
+        toast.error("Failed to upload image");
       }
     } finally {
       setLoading(false);
@@ -74,72 +75,63 @@ const Register = () => {
 
   // Handle form submission
   const onsubmit = async (data) => {
-    console.log(imageUrl)
     try {
       setLoading(true);
-      await createUser(data.email, data.password)
-        .then((result) => {
-          updateUserProfile(data.name, imageUrl)
-            .then(() => {
-              const saveUser = {
-                name: data.name,
-                photo: imageUrl,
-                email: data.email,
-                phone: data.phone,
-                password: data.password,
-                role: "customer",
-              };
-              fetch("http://localhost:5000/users", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(saveUser),
-              })
-                .then((res) => res.json())
-                .then((data) => {
-                  if (data.insertedId) {
-                    reset();
-                    Swal.fire("User Created Successfully");
-                    navigate("/");
-                  }
-                  
-                });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          toast.success("Registration Successful!", {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-          setTimeout(() => {
-            const redirectPath = location.state?.from?.pathname || "/";
-            navigate(redirectPath, { replace: true });
-          }, 3000);
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error("mail is already exist", {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-          setLoading(false);
+      const result = await createUser(data.email, data.password);
+      const user = result.user;
+      
+      // Update user profile
+      await updateUserProfile(data.name, imageUrl);
+      
+      // Update user state with new profile data
+      setUser({
+        ...user,
+        displayName: data.name,
+        photoURL: imageUrl
+      });
+
+      // Save user to database
+      const saveUser = {
+        name: data.name,
+        photo: imageUrl,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        role: "customer",
+      };
+
+      const res = await axiosPublic.post("/users", saveUser);
+      
+      if (res.data.insertedId) {
+        reset();
+        Swal.fire({
+          title: "Success!",
+          text: "User Created Successfully",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
+        
+        toast.success("Registration Successful!", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
         });
 
-      // Changed to 3000ms to match toast duration
+        setTimeout(() => {
+          const redirectPath = location.state?.from?.pathname || "/";
+          navigate(redirectPath, { replace: true });
+        }, 2000);
+      }
     } catch (error) {
-      toast.error("Login failed! please enter valid password and email");
+      console.error(error);
+      toast.error(error.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <>

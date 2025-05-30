@@ -12,10 +12,11 @@ import {
   AlignLeft,
 } from "lucide-react";
 import { MdOutlinePayments } from "react-icons/md";
+import useCart from "../Hook/useCart";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [cart] = useCart();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -115,7 +116,7 @@ const Dashboard = () => {
                 }
               >
                 <ShoppingCart size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">MY CART</span>
+                <span className="truncate">MY CART ({cart.length})</span>
               </NavLink>
             </li>
             <li>
