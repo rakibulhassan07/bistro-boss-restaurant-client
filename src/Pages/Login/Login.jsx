@@ -7,13 +7,14 @@ import { Helmet } from "react-helmet-async";
 import { AuthContext } from "../../provider/AuthProvider";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SocialLoginButton from "../../components/SocialLoginButton/SocialLoginButton";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/"; //this is used to redirect the user after login
+  const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -121,11 +122,7 @@ const Login = () => {
                 <p className="text-center text-gray-600 mb-4">
                   Or sign in with
                 </p>
-                <div className="flex justify-center space-x-4">
-                  <button className="w-10 h-10 bg-white border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors">
-                    <FcGoogle size={20} />
-                  </button>
-                </div>
+                <SocialLoginButton />
               </div>
             </div>
           </div>

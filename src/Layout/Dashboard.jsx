@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import {
   Home,
@@ -8,51 +8,20 @@ import {
   Menu,
   ShoppingBag,
   Phone,
-  X,
-  AlignLeft,
 } from "lucide-react";
+import { FaBook,FaUsers } from "react-icons/fa";
 import { MdOutlinePayments } from "react-icons/md";
 import useCart from "../Hook/useCart";
-
+import { GiForkKnifeSpoon } from "react-icons/gi";
+import { MdOutlineManageSearch } from "react-icons/md";
+import useAdmin from "../Hook/useAdmin";
 const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [cart] = useCart();
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
+  const [isAdmin]= useAdmin(); // Replace with actual admin check logic
   return (
-    <div className="flex relative">
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={closeSidebar}
-        ></div>
-      )}
-
-      {/* Mobile Menu Button */}
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-yellow-600 text-white p-2 rounded-md shadow-lg"
-      >
-        {isSidebarOpen ? <X size={24} /> : <AlignLeft size={24} />}
-      </button>
-
+    <div className="flex">
       {/* Sidebar */}
-      <div
-        className={`
-          fixed lg:static inset-y-0 left-0 z-50 
-          w-64 min-h-screen bg-gradient-to-b from-yellow-600 to-yellow-700 text-white
-          transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0
-        `}
-      >
+      <div className="w-64 min-h-screen bg-gradient-to-b from-yellow-600 to-yellow-700 text-white">
         {/* Logo Section */}
         <div className="p-6 border-b border-yellow-500">
           <h1 className="text-lg font-bold">BISTRO BOSS</h1>
@@ -63,10 +32,80 @@ const Dashboard = () => {
         <nav className="py-4">
           <ul className="menu">
             {/* User Section */}
+             {
+               isAdmin ? 
+               <>
+               <li>
+              <NavLink
+                to="/dashboard/adminHome"
+                className={({ isActive }) =>
+                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
+                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
+                  }`
+                }
+              >
+                <Home size={18} className="mr-3 flex-shrink-0" />
+                <span className="truncate">Admin HOME</span>
+              </NavLink>
+            </li>
             <li>
               <NavLink
+                to="/dashboard/addItems"
+                className={({ isActive }) =>
+                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
+                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
+                  }`
+                }
+              >
+                <GiForkKnifeSpoon size={18} className="mr-3 flex-shrink-0" />
+                <span className="truncate">Add Items</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/manageItems"
+                className={({ isActive }) =>
+                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
+                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
+                  }`
+                }
+              >
+                <MdOutlineManageSearch size={18} className="mr-3 flex-shrink-0" />
+                <span className="truncate">Manage Items</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/manageBookings"
+                className={({ isActive }) =>
+                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
+                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
+                  }`
+                }
+              >
+                <FaBook size={18} className="mr-3 flex-shrink-0" />
+                <span className="truncate">Manage Bookings</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/allUsers"
+                className={({ isActive }) =>
+                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
+                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
+                  }`
+                }
+              >
+                <FaUsers  size={18} className="mr-3 flex-shrink-0" />
+                <span className="truncate">All Users</span>
+              </NavLink>
+            </li>
+           
+               </>:
+               <>
+                <li>
+              <NavLink
                 to="/dashboard/userhome"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -80,7 +119,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/dashboard/reservation"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -94,7 +132,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/dashboard/payment-history"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -108,7 +145,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/dashboard/cart"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -122,7 +158,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/dashboard/add-review"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -136,7 +171,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/dashboard/my-booking"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -147,6 +181,8 @@ const Dashboard = () => {
                 <span className="truncate">MY BOOKING</span>
               </NavLink>
             </li>
+               </>
+             }
 
             {/* Spacer between sections */}
             <li className="my-4"></li>
@@ -155,7 +191,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -169,7 +204,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/menu"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -183,7 +217,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/shop"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -197,7 +230,6 @@ const Dashboard = () => {
             <li>
               <NavLink
                 to="/contact"
-                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -213,9 +245,8 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 lg:ml-0">
-        {/* Content wrapper with proper spacing for mobile menu button */}
-        <div className="pt-16 lg:pt-0">
+      <div className="flex-1">
+        <div className="p-8">
           <Outlet />
         </div>
       </div>

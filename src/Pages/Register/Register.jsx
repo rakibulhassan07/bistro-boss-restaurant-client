@@ -9,15 +9,17 @@ import { MdOutlineBakeryDining } from "react-icons/md";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { BsPersonFill } from "react-icons/bs";
 import { FaPhoneAlt } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../provider/AuthProvider";
 import img from "../../assets/others/authentication1.png";
 import useAxiosPublic from "../../Hook/useAxiosPublic";
 import Swal from "sweetalert2";
+import SocialLoginButton from "../../components/SocialLoginButton/SocialLoginButton";
 
 const Register = () => {
   const axiosPublic = useAxiosPublic();
-  const { createUser, updateUserProfile, setUser } = useContext(AuthContext);
+  const { createUser, updateUserProfile, setUser, googleSignIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -64,9 +66,19 @@ const Register = () => {
       const data = await response.json();
       if (data.success) {
         setImageUrl(data.data.url);
-        toast.success("Image uploaded successfully!");
+        Swal.fire({
+          title: "Success!",
+          text: "Image uploaded successfully!",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
       } else {
-        toast.error("Failed to upload image");
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to upload image",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
       }
     } finally {
       setLoading(false);
@@ -110,15 +122,6 @@ const Register = () => {
           icon: "success",
           confirmButtonText: "OK"
         });
-        
-        toast.success("Registration Successful!", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
 
         setTimeout(() => {
           const redirectPath = location.state?.from?.pathname || "/";
@@ -127,11 +130,28 @@ const Register = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Registration failed. Please try again.");
+      if (error.code === 'auth/email-already-in-use') {
+        Swal.fire({
+          title: "Email Already Exists!",
+          text: "This email is already registered. Please use a different email ",
+          icon: "warning",
+          confirmButtonText: "OK"
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: error.message || "Registration failed. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  // Handle Google Sign In
+ 
 
   return (
     <>
@@ -280,6 +300,20 @@ const Register = () => {
                   )}
                 </button>
               </form>
+
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                </div>
+              </div>
+
+              {/* Google Sign In Button */}
+             <SocialLoginButton />
+
               <p className="text-center mt-4">
                 <span className="text-sm text-gray-600">
                   Already registered?{" "}
