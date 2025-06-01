@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter} from "react-router-dom";
 import Main from "../Layout/Main";
 import Home from "../Pages/Home/Home/Home";
 import Menu from "../Pages/Menu/Menu/Menu";
@@ -6,7 +6,6 @@ import Order from "../Pages/Order/Order/Order";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import Dashboard from "../Layout/Dashboard";
-import { path } from "framer-motion/client";
 import Cart from "../Pages/Dashboard/Cart/Cart";
 import PrivateRoute from "./PrivateRoute";
 import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
@@ -15,6 +14,8 @@ import AdminHome from "../Pages/Dashboard/AdminHome/AdminHome";
 import AddItems from "../Pages/Dashboard/AddItems/AddItems";
 import ManageItems from "../Pages/Dashboard/ManageItems/ManageItems";
 import ManageBookings from "../Pages/Dashboard/ManageBookings/ManageBookings";
+import UpdateItem from "../Pages/Dashboard/UpdateItem/UpdateItem";
+
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +83,12 @@ export const router = createBrowserRouter([
             <ManageBookings></ManageBookings>
           </AdminRoute>
         ),
+      },
+      {
+         path: "UpdateItem/:id",
+        element: <AdminRoute><UpdateItem></UpdateItem></AdminRoute>,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/menu/${params.id}`),
       },
       {
         path: "allUsers",
