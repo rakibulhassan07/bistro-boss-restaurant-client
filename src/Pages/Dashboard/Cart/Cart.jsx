@@ -3,6 +3,7 @@ import { Trash2 } from "lucide-react";
 import useCart from "../../../Hook/useCart";
 import useAxiosSecure from "../../../Hook/useAxiosSecure";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   // Sample cart data - replace with your actual cart data
@@ -61,9 +62,12 @@ const Cart = () => {
             <div className="text-lg md:text-xl font-bold text-gray-800 text-center sm:text-left">
               TOTAL PRICE: ${totalPrice}
             </div>
+            <Link to="/dashboard/payment">
             <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 md:px-8 py-2 rounded font-bold transition-colors w-full sm:w-auto">
               PAY
             </button>
+            </Link>
+            
           </div>
         </div>
 

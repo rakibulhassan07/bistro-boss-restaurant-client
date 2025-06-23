@@ -15,6 +15,11 @@ import AddItems from "../Pages/Dashboard/AddItems/AddItems";
 import ManageItems from "../Pages/Dashboard/ManageItems/ManageItems";
 import ManageBookings from "../Pages/Dashboard/ManageBookings/ManageBookings";
 import UpdateItem from "../Pages/Dashboard/UpdateItem/UpdateItem";
+import Payment from "../Pages/Dashboard/Payment/Payment";
+import UserHome from "../Pages/Dashboard/UserHome/UserHome";
+import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
+import Review from "../Pages/Dashboard/Review/Review";
+
 
 
 export const router = createBrowserRouter([
@@ -102,6 +107,22 @@ export const router = createBrowserRouter([
         path: "cart",
         element: <Cart></Cart>,
       },
+      {
+        path:"payment",
+        element:<Payment></Payment>,
+      },
+      {
+        path :"userhome",
+        element:<UserHome></UserHome> 
+      },
+      {
+        path:"payment-history",
+        element:<PaymentHistory></PaymentHistory> 
+      },
+      {
+        path:"add-review",
+        element:<Review></Review> 
+      }
     ],
   },
 ]);

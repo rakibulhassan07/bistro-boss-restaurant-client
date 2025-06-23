@@ -24,8 +24,8 @@ const Dashboard = () => {
       <div className="w-64 min-h-screen bg-gradient-to-b from-yellow-600 to-yellow-700 text-white">
         {/* Logo Section */}
         <div className="p-6 border-b border-yellow-500">
-          <h1 className="text-lg font-bold">BISTRO BOSS</h1>
-          <p className="text-sm opacity-90">RESTAURANT</p>
+          <h1 className="text-lg font-bold">THE PIZZA</h1>
+          <p className="text-sm opacity-90">GARDEN</p>
         </div>
 
         {/* Navigation Menu */}
@@ -118,7 +118,7 @@ const Dashboard = () => {
             </li>
             <li>
               <NavLink
-                to="/dashboard/reservation"
+                to="/dashboard/payment"
                 className={({ isActive }) =>
                   `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
                     isActive ? "bg-yellow-600 border-r-2 border-white" : ""
@@ -126,7 +126,7 @@ const Dashboard = () => {
                 }
               >
                 <Calendar size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">RESERVATION</span>
+                <span className="truncate">MAKE PAYMENT</span>
               </NavLink>
             </li>
             <li>
@@ -168,19 +168,7 @@ const Dashboard = () => {
                 <span className="truncate">ADD REVIEW</span>
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/dashboard/my-booking"
-                className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
-                }
-              >
-                <Calendar size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">MY BOOKING</span>
-              </NavLink>
-            </li>
+           
                </>
              }
 
