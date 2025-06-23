@@ -84,11 +84,8 @@ const AddItems = () => {
 
       };
       
-      console.log('Sending menu item to database:', menuItem);
-      
       // Save to database
       const res = await axiosSecure.post('/menu', menuItem);
-      console.log('Database response:', res.data);
       
       if (res.data.insertedId) {
         // Show success message

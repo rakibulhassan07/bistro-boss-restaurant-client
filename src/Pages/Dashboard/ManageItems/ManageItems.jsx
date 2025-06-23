@@ -1,51 +1,43 @@
 import React from "react";
 import { Edit, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useMenu from "../../../Hook/useMenu";
 import useAxiosSecure from "../../../Hook/useAxiosSecure";
 import Swal from "sweetalert2";
+import { i } from "framer-motion/client";
 
 const ManageItems = () => {
-  // This would typically come from props or API call
-  
-  const [menu, refetch] = useMenu();
+  const [menu, , refetch] = useMenu();
   const axiosSecure = useAxiosSecure();
   
 
-  const handleDeleteItem = (item) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const res = await axiosSecure.delete(`/menu/${item._id}`);
-          if (res.data.deletedCount > 0) {
-            await refetch(); // Wait for the refetch to complete
-            Swal.fire({
-              title: "Deleted!",
-              text: `${item.name} has been deleted.`,
-              icon: "success",
-              confirmButtonText: "OK",
-            });
-          }
-        } catch (error) {
-          console.error('Error deleting item:', error);
-          Swal.fire({
-            title: "Error!",
-            text: "Failed to delete item",
-            icon: "error",
-            confirmButtonText: "OK",
+  const handleDelete = (id) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axiosSecure.delete(`/menu/${id}`)
+          .then((response) => {
+            if (response.data.deletedCount > 0) {
+              refetch();
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+            }
           });
         }
-      }
-    });
-  };
+      });
+    };
+
+  
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -113,7 +105,7 @@ const ManageItems = () => {
                 </div>
                 <div className="flex justify-center">
                   <button
-                    onClick={() => handleDeleteItem(item)}
+                    onClick={() =>handleDelete(item._id)}
                     className="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors"
                     title="Delete Item"
                   >
