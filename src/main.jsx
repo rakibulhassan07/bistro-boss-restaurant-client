@@ -15,7 +15,7 @@ import AuthProvider from "./provider/AuthProvider.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient} hydrateFallback={null}>
         <HelmetProvider>
           <div className="max-w-screen-xl mx-auto">
             <RouterProvider router={router} />

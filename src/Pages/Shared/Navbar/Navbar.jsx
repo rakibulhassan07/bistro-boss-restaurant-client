@@ -12,7 +12,7 @@ const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const dropdownRef = useRef(null);
   const [cart]=useCart();
-
+ 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };

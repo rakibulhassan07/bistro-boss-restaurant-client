@@ -80,7 +80,8 @@ const AddItems = () => {
         recipe: data.recipe,
         image: imageUrl,
         category: data.category,
-        price: parseFloat(data.price)
+       price: Number(data.price)
+
       };
       
       console.log('Sending menu item to database:', menuItem);
