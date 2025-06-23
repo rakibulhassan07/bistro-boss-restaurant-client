@@ -1,10 +1,10 @@
 import React from 'react';
-import { Trash2, Crown } from 'lucide-react';
+import { Trash2, Crown, UserCheck, Users } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hook/useAxiosSecure';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import {FaUsers } from "react-icons/fa";
+
 const AllUsers = () => {
     const axiosSecure = useAxiosSecure();
     
@@ -30,9 +30,7 @@ const AllUsers = () => {
                         confirmButtonText: "OK"
                     });
                 } 
-                
             })
-            
         } catch (error) {
             console.error('Error making admin:', error);
             Swal.fire({
@@ -89,70 +87,163 @@ const AllUsers = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
-            {/* Header with question */}
+            {/* Header */}
             <div className="text-center mb-8">
                 <p className="text-orange-400 text-sm mb-2">---How many??---</p>
                 <h1 className="text-3xl font-bold text-gray-800">MANAGE ALL USERS</h1>
             </div>
 
-            {/* Total Users Counter */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6 max-w-4xl mx-auto">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">
-                    TOTAL USERS: {users.length}
-                </h2>
+            {/* Stats Card */}
+            <div className="max-w-6xl mx-auto mb-6">
+                <div className="bg-gradient-to-r from-orange-400 to-orange-500 rounded-lg shadow-lg p-6 text-white">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <Users size={32} />
+                            <div>
+                                <h2 className="text-2xl font-bold">Total Users</h2>
+                                <p className="text-orange-100">Registered members</p>
+                            </div>
+                        </div>
+                        <div className="text-4xl font-bold">
+                            {users.length}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                {/* Table Header */}
-                <div className="bg-orange-300 rounded-t-lg">
-                    <div className="grid grid-cols-6 gap-4 p-4 text-white font-semibold">
-                        <div className="text-center">No.</div>
-                        <div className="text-center">NAME</div>
-                        <div className="text-center">EMAIL</div>
-                        <div className="text-center">ROLE</div>
-                        <div className="text-center">MAKE ADMIN</div>
-                        <div className="text-center">DELETE</div>
+            {/* Users Table */}
+            <div className="max-w-6xl mx-auto">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    {/* Table Header */}
+                    <div className="bg-gradient-to-r from-orange-500 to-orange-600">
+                        <div className="grid grid-cols-12 gap-4 px-6 py-4 text-white font-semibold">
+                            <div className="col-span-1 text-center">
+                                <span className="text-sm">NO.</span>
+                            </div>
+                            <div className="col-span-3 text-left">
+                                <span className="text-sm">NAME</span>
+                            </div>
+                            <div className="col-span-4 text-left">
+                                <span className="text-sm">EMAIL</span>
+                            </div>
+                            <div className="col-span-2 text-center">
+                                <span className="text-sm">ROLE</span>
+                            </div>
+                            <div className="col-span-1 text-center">
+                                <span className="text-sm">ADMIN</span>
+                            </div>
+                            <div className="col-span-1 text-center">
+                                <span className="text-sm">DELETE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Table Body */}
+                    <div className="divide-y divide-gray-200">
+                        {users.length === 0 ? (
+                            <div className="px-6 py-12 text-center">
+                                <Users size={48} className="mx-auto text-gray-400 mb-4" />
+                                <p className="text-gray-500 text-lg">No users found!</p>
+                                <p className="text-gray-400 text-sm">Users will appear here once they register.</p>
+                            </div>
+                        ) : (
+                            users.map((user, index) => (
+                                <div 
+                                    key={user._id} 
+                                    className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50 transition-colors items-center"
+                                >
+                                    {/* Serial Number */}
+                                    <div className="col-span-1 text-center">
+                                        <span className="inline-flex items-center justify-center w-8 h-8 bg-orange-100 text-orange-800 rounded-full font-semibold text-sm">
+                                            {index + 1}
+                                        </span>
+                                    </div>
+
+                                    {/* Name */}
+                                    <div className="col-span-3">
+                                        <div className="flex items-center space-x-3">
+                                            <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold">
+                                                {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                                            </div>
+                                            <div>
+                                                <p className="font-medium text-gray-900">{user.name}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Email */}
+                                    <div className="col-span-4">
+                                        <p className="text-gray-600 truncate" title={user.email}>
+                                            {user.email}
+                                        </p>
+                                    </div>
+
+                                    {/* Role Status */}
+                                    <div className="col-span-2 text-center">
+                                        {user.role === 'admin' ? (
+                                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <Crown size={12} className="mr-1" />
+                                                Admin
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                <UserCheck size={12} className="mr-1" />
+                                                User
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Make Admin Button */}
+                                    <div className="col-span-1 text-center">
+                                        {user.role === 'admin' ? (
+                                            <div className="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
+                                                <Crown size={16} className="text-green-600" />
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleMakeAdmin(user)}
+                                                className="w-9 h-9 bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 rounded-lg transition-all duration-200 flex items-center justify-center group"
+                                                title="Make Admin"
+                                            >
+                                                <Crown size={16} className="group-hover:scale-110 transition-transform" />
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Delete Button */}
+                                    <div className="col-span-1 text-center">
+                                        <button
+                                            onClick={() => handleDeleteUser(user)}
+                                            className="w-9 h-9 bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 rounded-lg transition-all duration-200 flex items-center justify-center group"
+                                            title="Delete User"
+                                        >
+                                            <Trash2 size={16} className="group-hover:scale-110 transition-transform" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
 
-                {/* Table Body */}
-                <div className="bg-white border-l border-r border-b rounded-b-lg">
-                    {users.length === 0 ? (
-                        <div className="p-8 text-center text-gray-500">
-                            No users found!!
-                        </div>
-                    ) : (
-                        users.map((user, index) => (
-                            <div key={user._id} className="grid grid-cols-6 gap-4 p-4 border-b border-gray-100 items-center">
-                                <div className="text-center font-medium">{index + 1}</div>
-                                <div className="text-center font-medium">{user.name}</div>
-                                <div className="text-center text-gray-600">{user.email}</div>
-                                <div className="text-center">
-                                    <FaUsers size={20} className="inline-block mr-1" />
-                                </div>
-                                <div className="flex justify-center">
-                                    {
-                                        user.role === 'admin' ? 'Admin':
-                                        <button
-                                        onClick={() => handleMakeAdmin(user)}
-                                        className="bg-orange-400 hover:bg-orange-500 text-white p-2 rounded transition-colors"
-                                        title={user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
-                                    >
-                                        <Crown size={16} />
-                                    </button>
-                                    }
-                                </div>
-                                <div className="flex justify-center">
-                                    <button
-                                        onClick={() => handleDeleteUser(user)}
-                                        className="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors"
-                                        title="Delete User"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
+                {/* Footer Stats */}
+                {users.length > 0 && (
+                    <div className="mt-4 bg-white rounded-lg shadow p-4">
+                        <div className="flex justify-between items-center text-sm text-gray-600">
+                            <span>
+                                Showing {users.length} user{users.length !== 1 ? 's' : ''}
+                            </span>
+                            <div className="flex space-x-4">
+                                <span>
+                                    Admins: {users.filter(user => user.role === 'admin').length}
+                                </span>
+                                <span>
+                                    Regular Users: {users.filter(user => user.role !== 'admin').length}
+                                </span>
                             </div>
-                        ))
-                    )}
-                </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
