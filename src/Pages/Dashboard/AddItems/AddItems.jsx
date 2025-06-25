@@ -73,16 +73,18 @@ const AddItems = () => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      
+      console.log("Form data:", data);
+      console.log("Selected category:", data.category);
       // Add the image URL to the form data
       const menuItem = {
         name: data.name,
         recipe: data.recipe,
         image: imageUrl,
         category: data.category,
-       price: Number(data.price)
-
+        price: Number(data.price)
       };
+      
+      console.log("Menu item to be sent:", menuItem);
       
       // Save to database
       const res = await axiosSecure.post('/menu', menuItem);
@@ -180,9 +182,11 @@ const AddItems = () => {
                   </option>
                   <option value="salad">Salad</option>
                   <option value="pizza">Pizza</option>
-                  <option value="soups">Soups</option>
-                  <option value="desserts">Desserts</option>
+                  <option value="soup">Soup</option>
+                  <option value="dessert">Dessert</option>
                   <option value="drinks">Drinks</option>
+                  <option value="popular">Popular</option>
+                  <option value="offered">Offered</option>
                 </select>
                 {errors.category && (
                   <p className="text-red-500 text-sm mt-1">

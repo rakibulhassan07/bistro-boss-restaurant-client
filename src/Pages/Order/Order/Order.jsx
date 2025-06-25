@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import OrderTab from "../OrderTab/OrderTab";
 
 const Order = () => {
-    const categories =['salad','pizza','soup','dessert','drinks']
+    const categories =['salad','pizza','soup','dessert','drinks','popular','offered']
     const {category}=useParams()
     const initialIndex=categories.indexOf(category)
   const [tabIndex, setTabIndex] = useState(initialIndex);
@@ -20,6 +20,8 @@ const Order = () => {
   const salad = menu.filter((item) => item.category === "salad");
   const soup = menu.filter((item) => item.category === "soup");
   const drinks = menu.filter((item) => item.category === "drinks");
+  const popular = menu.filter((item) => item.category === "popular");
+  const offered = menu.filter((item) => item.category === "offered");
 
   return (
     <div className="min-h-screen">
@@ -75,22 +77,46 @@ const Order = () => {
             >
               Drinks
             </Tab>
+            <Tab
+              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
+                tabIndex === 5
+                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
+                  : "text-black hover:text-yellow-600"
+              }`}
+            >
+              Popular
+            </Tab>
+            <Tab
+              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
+                tabIndex === 6
+                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
+                  : "text-black hover:text-yellow-600"
+              }`}
+            >
+              Offered
+            </Tab>
           </TabList>
 
           <TabPanel className="p-4">
-            <OrderTab title={dessert}></OrderTab>
+            <OrderTab title={salad}></OrderTab>
           </TabPanel>
           <TabPanel className="p-4">
             <OrderTab title={pizza}></OrderTab>
           </TabPanel>
           <TabPanel className="p-4">
-           <OrderTab title={salad}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
             <OrderTab title={soup}></OrderTab>
           </TabPanel>
           <TabPanel className="p-4">
+            <OrderTab title={dessert}></OrderTab>
+          </TabPanel>
+          <TabPanel className="p-4">
             <OrderTab title={drinks}></OrderTab>
+          </TabPanel>
+          <TabPanel className="p-4">
+            <OrderTab title={popular}></OrderTab>
+          </TabPanel>
+          <TabPanel className="p-4">
+            <OrderTab title={offered}></OrderTab>
           </TabPanel>
         </Tabs>
       </div>
