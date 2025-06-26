@@ -4,6 +4,7 @@ import { MdOutlineAccountCircle, MdShoppingCart } from "react-icons/md";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../provider/AuthProvider";
 import useCart from "../../../Hook/useCart";
+import useAdmin from "../../../Hook/useAdmin";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +13,11 @@ const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const dropdownRef = useRef(null);
   const [cart]=useCart();
- 
+  const [isAdmin, isAdminLoading]=useAdmin();
+  
+  console.log('User:', user?.email);
+  console.log('Is Admin:', isAdmin);
+  console.log('Admin Loading:', isAdminLoading);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -63,16 +68,23 @@ const Navbar = () => {
     <>
       <li><Link to="/" className="font-medium">HOME</Link></li>
       <li><Link to="/contact" className="font-medium">CONTACT US</Link></li>
-      <li><Link to="/dashboard" className="font-medium">DASHBOARD</Link></li>
+      {
+        user && !isAdminLoading && isAdmin && <li><Link to="/dashboard/adminHome" className="font-medium">DASHBOARD</Link></li>
+      }
+      {
+        user && !isAdminLoading && !isAdmin && <li><Link to="/dashboard/userHome" className="font-medium">DASHBOARD</Link></li>
+      }
       <li><Link to="/menu" className="font-medium">OUR MENU</Link></li>
       <li><Link to="/order/salad" className="font-medium">ORDER FOOD</Link></li>
-      {/* Shopping Cart */}
+      {/* Shopping Cart - only show for customers, not admins */}
+      {user && !isAdminLoading && !isAdmin && (
         <Link to="/dashboard/cart" className="relative">
           <div className="btn btn-ghost btn-circle">
             <MdShoppingCart className="h-6 w-6" />
           </div>
            <div className="badge bg-red-500 relative right-5 bottom-3">+{cart.length}</div>
         </Link>
+      )}
     </>
   );
 
