@@ -8,6 +8,7 @@ import useMenu from "../../../Hook/useMenu";
 import FoodCard from "../../../components/FoodCard/FoodCard";
 import { useParams } from "react-router-dom";
 import OrderTab from "../OrderTab/OrderTab";
+import "./Order.css";
 
 const Order = () => {
     const categories =['salad','pizza','soup','dessert','drinks','popular','offered']
@@ -24,101 +25,84 @@ const Order = () => {
   const offered = menu.filter((item) => item.category === "offered");
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen order-page">
       <Helmet>
         <title>THE PIZZA GARDEN | Order Food</title>
       </Helmet>
-      <Cover img={orderImg} title="Order Now"></Cover>
+      <div className="order-cover">
+        <Cover img={orderImg} title="Order Now"></Cover>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
-          <TabList className="flex flex-wrap justify-center gap-2 md:gap-4 border-b border-gray-300 mb-8">
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 0
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Salad
-            </Tab>
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 1
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Pizza
-            </Tab>
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 2
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Soups
-            </Tab>
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 3
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Desserts
-            </Tab>
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 4
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Drinks
-            </Tab>
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 5
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Popular
-            </Tab>
-            <Tab
-              className={`px-3 py-2 text-sm md:text-base cursor-pointer transition-colors ${
-                tabIndex === 6
-                  ? "text-yellow-600 font-bold border-b-2 border-yellow-600"
-                  : "text-black hover:text-yellow-600"
-              }`}
-            >
-              Offered
-            </Tab>
-          </TabList>
+        <div className="order-tabs">
+          <Tabs defaultIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+            <TabList>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">🥗</span>
+                  <span>Salad</span>
+                </div>
+              </Tab>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">🍕</span>
+                  <span>Pizza</span>
+                </div>
+              </Tab>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">🍲</span>
+                  <span>Soups</span>
+                </div>
+              </Tab>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">🍰</span>
+                  <span>Desserts</span>
+                </div>
+              </Tab>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">🥤</span>
+                  <span>Drinks</span>
+                </div>
+              </Tab>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">⭐</span>
+                  <span>Popular</span>
+                </div>
+              </Tab>
+              <Tab>
+                <div className="tab-with-icon">
+                  <span className="tab-icon">🎁</span>
+                  <span>Offered</span>
+                </div>
+              </Tab>
+            </TabList>
 
-          <TabPanel className="p-4">
-            <OrderTab title={salad}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
-            <OrderTab title={pizza}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
-            <OrderTab title={soup}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
-            <OrderTab title={dessert}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
-            <OrderTab title={drinks}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
-            <OrderTab title={popular}></OrderTab>
-          </TabPanel>
-          <TabPanel className="p-4">
-            <OrderTab title={offered}></OrderTab>
-          </TabPanel>
-        </Tabs>
+            <TabPanel>
+              <OrderTab title={salad}></OrderTab>
+            </TabPanel>
+            <TabPanel>
+              <OrderTab title={pizza}></OrderTab>
+            </TabPanel>
+            <TabPanel>
+              <OrderTab title={soup}></OrderTab>
+            </TabPanel>
+            <TabPanel>
+              <OrderTab title={dessert}></OrderTab>
+            </TabPanel>
+            <TabPanel>
+              <OrderTab title={drinks}></OrderTab>
+            </TabPanel>
+            <TabPanel>
+              <OrderTab title={popular}></OrderTab>
+            </TabPanel>
+            <TabPanel>
+              <OrderTab title={offered}></OrderTab>
+            </TabPanel>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

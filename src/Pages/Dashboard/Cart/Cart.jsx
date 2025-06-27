@@ -4,6 +4,7 @@ import useCart from "../../../Hook/useCart";
 import useAxiosSecure from "../../../Hook/useAxiosSecure";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import "./Cart.css";
 
 const Cart = () => {
   // Sample cart data - replace with your actual cart data
@@ -39,98 +40,81 @@ const Cart = () => {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="text-center mb-4 md:mb-6">
-        <span className="text-yellow-600 font-medium text-sm md:text-base">
-          ---My Cart---
-        </span>
-      </div>
+    <div className="cart-container">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <p className="text-orange-500 text-sm italic mb-4">---My Cart---</p>
+          <h1 className="text-4xl font-bold text-gray-800 tracking-wide">WANNA ADD MORE?</h1>
+        </div>
 
-      {/* Main Heading */}
-      <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6 md:mb-8">
-        WANNA ADD MORE?
-      </h1>
-
-      <div className="bg-white rounded-lg shadow-sm max-w-6xl mx-auto">
-        {/* Summary Section */}
-        <div className="bg-white px-4 md:px-6 py-4 md:py-6 border-b">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
-            <div className="text-lg md:text-xl font-bold text-gray-800 text-center sm:text-left">
-              TOTAL ORDERS:{cart.length}
-            </div>
-            <div className="text-lg md:text-xl font-bold text-gray-800 text-center sm:text-left">
-              TOTAL PRICE: ${totalPrice}
-            </div>
-            <Link to="/dashboard/payment">
-            <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 md:px-8 py-2 rounded font-bold transition-colors w-full sm:w-auto">
-              PAY
-            </button>
+        {/* Summary Cards */}
+        <div className="summary-section">
+          <div className="summary-card">
+            <h3>{cart?.length || 0}</h3>
+            <p>Total Items</p>
+          </div>
+          <div className="summary-card">
+            <h3>${totalPrice}</h3>
+            <p>Total Price</p>
+          </div>
+          <div className="summary-card">
+            <Link to="/dashboard/payment" className="pay-btn">
+              Proceed to Pay
             </Link>
-            
           </div>
         </div>
 
-        {/* Desktop Table Header - Hidden on mobile */}
-        <div className="hidden md:block bg-yellow-600 text-white px-6 py-4">
-          <div className="grid grid-cols-12 gap-4 items-center font-bold">
-            <div className="col-span-2 text-center">ITEM IMAGE</div>
-            <div className="col-span-4 text-center">ITEM NAME</div>
-            <div className="col-span-3 text-center">PRICE</div>
-            <div className="col-span-3 text-center">ACTION</div>
+        {/* Main Content Card */}
+        <div className="cart-card p-8">
+          {/* Table */}
+          <div className="cart-table-container overflow-x-auto">
+            <table className="cart-table">
+              {/* Table Header */}
+              <thead>
+                <tr>
+                  <th className="text-center">#</th>
+                  <th>Item Image</th>
+                  <th>Item Name</th>
+                  <th>Price</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              
+              {/* Table Body */}
+              <tbody>
+                {cart?.length > 0 ? (
+                  cart.map((item, index) => (
+                    <tr key={item._id} className={`cart-item-enter ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`} style={{ animationDelay: `${index * 0.1}s` }}>
+                      <td className="index-cell">{index + 1}</td>
+                      <td className="item-image-cell">
+                        <img src={item.image} alt={item.name} className="item-image" />
+                      </td>
+                      <td className="item-name-cell">{item.name}</td>
+                      <td className="price-cell">${parseFloat(item.price).toFixed(2)}</td>
+                      <td className="action-cell">
+                        <button
+                          onClick={() => handleDelete(item._id)}
+                          className="delete-btn"
+                          title="Remove item"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="empty-cart">
+                      <div className="empty-cart-icon">🛒</div>
+                      <h3>Your cart is empty</h3>
+                      <p>Add some delicious items to get started!</p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-        </div>
-
-        {/* Cart Items */}
-        <div className="divide-y divide-gray-200">
-          {cart.length > 0 ? (
-            cart.map((item, index) => (
-              <div key={item._id} className="px-4 md:px-6 py-4">
-                {/* Desktop Layout */}
-                <div className="hidden md:grid grid-cols-12 gap-4 items-center">
-                  {/* Item Number */}
-                  <div className="col-span-1 text-center font-bold text-gray-800">
-                    {index + 1}
-                  </div>
-
-                  {/* Item Image */}
-                  <div className="col-span-1">
-                    <div className="w-12 h-12 mask mask-squircle">
-                      <img className="rounded" src={item.image} alt="" />
-                    </div>
-                  </div>
-
-                  {/* Item Name */}
-                  <div className="col-span-4 text-center font-medium text-gray-700">
-                    {item.name}
-                  </div>
-
-                  {/* Price */}
-                  <div className="col-span-3 text-center font-bold text-gray-800">
-                    ${item.price}
-                  </div>
-
-                  {/* Action */}
-                  <div className="col-span-3 text-center">
-                    <button
-                      onClick={() =>handleDelete(item._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors inline-flex items-center justify-center"
-                      title="Remove item"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="px-4 md:px-6 py-8 md:py-12 text-center text-gray-500">
-              <p className="text-base md:text-lg">Your cart is empty</p>
-              <p className="text-sm">
-                Add some delicious items to get started!
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -1,0 +1,309 @@
+/* Payment History Component Styles */
+.payment-history-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+}
+
+.payment-history-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.payment-history-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Enhanced Table Styles */
+.payment-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.payment-table thead tr {
+  background: linear-gradient(45deg, #f97316, #ea580c);
+}
+
+.payment-table th {
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.payment-table th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.payment-table th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.payment-table tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.payment-table tbody tr:hover {
+  background-color: #fef7f0 !important;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+}
+
+.payment-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.payment-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+.payment-table td {
+  padding: 0.875rem 0.75rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Index Column Styling */
+.index-cell {
+
+  color: rgb(8, 8, 8);
+  font-weight: 700;
+  text-align: center;
+  width: 60px;
+  min-width: 60px;
+  position: relative;
+}
+
+.index-cell::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Status Badge Animations */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  animation: fadeInUp 0.5s ease;
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+}
+
+.status-success {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.status-pending {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.status-failed {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #991b1b;
+  border: 1px solid #f87171;
+}
+
+/* Transaction ID Styling */
+.transaction-id {
+  font-family: 'Courier New', monospace;
+  background: #f8fafc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.75rem;
+  color: #475569;
+  word-break: break-all;
+}
+
+/* Price Styling */
+.price-cell {
+  font-weight: 700;
+  color: #059669;
+  font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(5, 150, 105, 0.1);
+}
+
+/* Email Styling */
+.email-cell {
+  color: #475569;
+  font-size: 0.875rem;
+  word-break: break-word;
+  max-width: 200px;
+}
+
+/* Date Styling */
+.date-cell {
+  color: #64748b;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* Summary Cards */
+.summary-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
+  transition: all 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(249, 115, 22, 0.4);
+}
+
+.summary-card h3 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.summary-card p {
+  opacity: 0.9;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #f97316;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-history-container {
+    padding: 1rem;
+  }
+  
+  .payment-table {
+    font-size: 0.75rem;
+  }
+  
+  .payment-table th,
+  .payment-table td {
+    padding: 0.5rem 0.375rem;
+  }
+  
+  .index-cell {
+    width: 40px;
+    min-width: 40px;
+  }
+  
+  .email-cell {
+    max-width: 120px;
+  }
+  
+  .transaction-id {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.25rem;
+  }
+  
+  .summary-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .summary-card {
+    padding: 1rem;
+  }
+  
+  .summary-card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .payment-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .payment-table {
+    min-width: 600px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .payment-history-container {
+    background: white;
+    padding: 0;
+  }
+  
+  .payment-history-card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .payment-table tbody tr:hover {
+    background-color: transparent !important;
+    transform: none;
+    box-shadow: none;
+  }
+}

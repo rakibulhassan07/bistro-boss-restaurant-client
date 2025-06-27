@@ -1,0 +1,71 @@
+/* OrderTab Animation Styles */
+.animated-card-wrapper {
+  animation: cardSlideIn 0.8s ease forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes cardSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Swiper Custom Styling */
+.mySwiper {
+  padding: 20px 0;
+}
+
+.mySwiper .swiper-pagination {
+  bottom: 10px !important;
+}
+
+.mySwiper .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  margin: 0 8px;
+  border-radius: 50%;
+}
+
+.mySwiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  transform: scale(1.3);
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.6);
+}
+
+/* Grid Animation */
+.grid {
+  animation: gridFadeIn 1s ease;
+}
+
+@keyframes gridFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .animated-card-wrapper {
+    animation-duration: 0.6s;
+  }
+}
+
+@media (max-width: 480px) {
+  .mySwiper {
+    padding: 10px 0;
+  }
+  
+  .mySwiper .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    margin: 0 6px;
+  }
+}

@@ -15,22 +15,24 @@ import useCart from "../Hook/useCart";
 import { GiForkKnifeSpoon } from "react-icons/gi";
 import { MdOutlineManageSearch } from "react-icons/md";
 import useAdmin from "../Hook/useAdmin";
+import "./Dashboard.css";
+
 const Dashboard = () => {
   const [cart] = useCart();
   const [isAdmin]= useAdmin(); // Replace with actual admin check logic
   return (
-    <div className="flex">
+    <div className="dashboard-layout">
       {/* Sidebar */}
-      <div className="w-64 min-h-screen bg-gradient-to-b from-yellow-600 to-yellow-700 text-white">
+      <div className="dashboard-sidebar">
         {/* Logo Section */}
-        <div className="p-6 border-b border-yellow-500">
-          <h1 className="text-lg font-bold">THE PIZZA</h1>
-          <p className="text-sm opacity-90">GARDEN</p>
+        <div className="dashboard-logo">
+          <h1 className="logo-title">THE PIZZA</h1>
+          <p className="logo-subtitle">GARDEN</p>
         </div>
 
         {/* Navigation Menu */}
-        <nav className="py-4">
-          <ul className="menu">
+        <nav className="dashboard-nav">
+          <ul className="nav-menu">
             {/* User Section */}
              {
                isAdmin ? 
@@ -39,65 +41,55 @@ const Dashboard = () => {
               <NavLink
                 to="/dashboard/adminHome"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Home size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">Admin HOME</span>
+                <Home size={18} className="nav-icon" />
+                <span className="nav-text">Admin HOME</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/addItems"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <GiForkKnifeSpoon size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">Add Items</span>
+                <GiForkKnifeSpoon size={18} className="nav-icon" />
+                <span className="nav-text">Add Items</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/manageItems"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <MdOutlineManageSearch size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">Manage Items</span>
+                <MdOutlineManageSearch size={18} className="nav-icon" />
+                <span className="nav-text">Manage Items</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/manageBookings"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <FaBook size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">Manage Bookings</span>
+                <FaBook size={18} className="nav-icon" />
+                <span className="nav-text">Manage Bookings</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/allUsers"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <FaUsers  size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">All Users</span>
+                <FaUsers size={18} className="nav-icon" />
+                <span className="nav-text">All Users</span>
               </NavLink>
             </li>
            
@@ -107,65 +99,55 @@ const Dashboard = () => {
               <NavLink
                 to="/dashboard/userhome"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Home size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">USER HOME</span>
+                <Home size={18} className="nav-icon" />
+                <span className="nav-text">USER HOME</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/payment"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Calendar size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">MAKE PAYMENT</span>
+                <Calendar size={18} className="nav-icon" />
+                <span className="nav-text">MAKE PAYMENT</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/payment-history"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <MdOutlinePayments size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">PAYMENT HISTORY</span>
+                <MdOutlinePayments size={18} className="nav-icon" />
+                <span className="nav-text">PAYMENT HISTORY</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/cart"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <ShoppingCart size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">MY CART ({cart.length})</span>
+                <ShoppingCart size={18} className="nav-icon" />
+                <span className="nav-text">MY CART ({cart.length})</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/add-review"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Star size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">ADD REVIEW</span>
+                <Star size={18} className="nav-icon" />
+                <span className="nav-text">ADD REVIEW</span>
               </NavLink>
             </li>
            
@@ -173,59 +155,51 @@ const Dashboard = () => {
              }
 
             {/* Spacer between sections */}
-            <li className="my-4"></li>
+            <li className="nav-separator"></li>
 
             {/* General Section */}
             <li>
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Home size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">HOME</span>
+                <Home size={18} className="nav-icon" />
+                <span className="nav-text">HOME</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/menu"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Menu size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">MENU</span>
+                <Menu size={18} className="nav-icon" />
+                <span className="nav-text">MENU</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/shop"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <ShoppingBag size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">SHOP</span>
+                <ShoppingBag size={18} className="nav-icon" />
+                <span className="nav-text">SHOP</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/contact"
                 className={({ isActive }) =>
-                  `flex items-center px-6 py-3 text-sm hover:bg-yellow-600 transition-colors ${
-                    isActive ? "bg-yellow-600 border-r-2 border-white" : ""
-                  }`
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
                 }
               >
-                <Phone size={18} className="mr-3 flex-shrink-0" />
-                <span className="truncate">CONTACT</span>
+                <Phone size={18} className="nav-icon" />
+                <span className="nav-text">CONTACT</span>
               </NavLink>
             </li>
           </ul>
@@ -233,8 +207,8 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1">
-        <div className="p-8">
+      <div className="dashboard-content">
+        <div className="content-wrapper">
           <Outlet />
         </div>
       </div>

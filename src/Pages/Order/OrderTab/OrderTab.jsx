@@ -1,6 +1,8 @@
 import React from "react";
 import FoodCard from "../../../components/FoodCard/FoodCard";
+import AnimatedFoodCard from "../../../components/AnimatedFoodCard/AnimatedFoodCard";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "./OrderTab.css";
 
 // Import Swiper styles
 import "swiper/css";
@@ -41,8 +43,14 @@ const OrderTab = ({ title }) => {
         {slides.map((slideItems, index) => (
           <SwiperSlide key={index}> 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-              {slideItems.map((item) => (
-                <FoodCard key={item._id} item={item}></FoodCard>
+              {slideItems.map((item, index) => (
+                <div 
+                  key={item._id} 
+                  className="animated-card-wrapper"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <AnimatedFoodCard item={item} />
+                </div>
               ))}
             </div>
           </SwiperSlide>
