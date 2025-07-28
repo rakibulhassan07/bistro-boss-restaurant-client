@@ -19,6 +19,8 @@ import Payment from "../Pages/Dashboard/Payment/Payment";
 import UserHome from "../Pages/Dashboard/UserHome/UserHome";
 import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
 import Review from "../Pages/Dashboard/Review/Review";
+import MyProfile from "../Pages/MyProfile/MyProfile";
+
 
 
 
@@ -38,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: "/order/:category",
         element: <Order></Order>,
+      },
+      {
+        path: "/myProfile",
+        element: <MyProfile></MyProfile>,
       },
       {
         path: "/login",
@@ -108,9 +114,10 @@ export const router = createBrowserRouter([
         element: <Cart></Cart>,
       },
       {
-        path:"payment",
-        element:<Payment></Payment>,
+       path: "payment",
+        element: <Payment></Payment>,
       },
+      
       {
         path :"userhome",
         element:<UserHome></UserHome> 

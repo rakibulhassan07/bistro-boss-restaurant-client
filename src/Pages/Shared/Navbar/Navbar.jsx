@@ -88,6 +88,7 @@ const Navbar = () => {
           </Link>
         </li>
       }
+     
       {
         user && !isAdminLoading && !isAdmin && 
         <li>
@@ -237,15 +238,15 @@ const Navbar = () => {
                   </p>
                   <p className="text-gray-500 text-xs">{user?.email}</p>
                 </div>
-                
-                <NavLink 
-                  to="/MyProfile" 
+                <Link  to="/myProfile" 
                   className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-amber-50 transition-colors duration-200"
-                  onClick={() => setIsProfileDropdownOpen(false)}
-                >
+                  onClick={() => setIsProfileDropdownOpen(false)}>
+                
                   <MdOutlineAccountCircle className="w-5 h-5 text-amber-600" />
                   <span className="font-medium">My Profile</span>
-                </NavLink>
+               
+                </Link>
+               
                 
                 <div className="border-t border-gray-200/50 my-1"></div>
                 

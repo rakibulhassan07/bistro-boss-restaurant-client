@@ -1,113 +1,144 @@
-import React from 'react';
-import { Wallet, Store, Phone, ShoppingCart, Star, Calendar, CreditCard } from 'lucide-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ShoppingCart, Star, Calendar, CreditCard, User } from 'lucide-react';
+import { AuthContext } from '../../../provider/AuthProvider';
+import useAxiosSecure from '../../../Hook/useAxiosSecure';
+import useCart from '../../../Hook/useCart';
 
 const UserHome = () => {
+    const { user } = useContext(AuthContext);
+    const axiosSecure = useAxiosSecure();
+    const [cart] = useCart();
+    
+    // State for user statistics
+    const [userStats, setUserStats] = useState({
+        totalOrders: 0,
+        totalPayments: 0,
+        totalReviews: 0,
+        totalBookings: 0
+    });
+    const [loading, setLoading] = useState(true);
+
+    // Fetch user-specific data
+    useEffect(() => {
+        const fetchUserStats = async () => {
+            if (!user?.email) return;
+            
+            try {
+                setLoading(true);
+                
+                // Fetch user's payments (completed orders)
+                const paymentsResponse = await axiosSecure.get(`/payments/${user.email}`);
+                const totalPayments = paymentsResponse.data.length;
+                
+                // Calculate total orders from payments
+                const totalOrders = paymentsResponse.data.reduce((total, payment) => {
+                    return total + (payment.menuIds ? payment.menuIds.length : 0);
+                }, 0);
+                
+                // Fetch user's reviews
+                const reviewsResponse = await axiosSecure.get(`/reviews?email=${user.email}`);
+                const totalReviews = reviewsResponse.data.length;
+                
+                // For now, set bookings to 0 (you can implement this when you have bookings API)
+                const totalBookings = 0;
+                
+                setUserStats({
+                    totalOrders,
+                    totalPayments,
+                    totalReviews,
+                    totalBookings
+                });
+                
+            } catch (error) {
+                console.error('Error fetching user stats:', error);
+                // Keep default values on error
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserStats();
+    }, [user?.email, axiosSecure]);
+    
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen p-6" style={{ backgroundColor: '#041224' }}>
             {/* Welcome Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">
+                <h1 className="text-3xl font-bold text-white">
                     Hi, Welcome Back!
                 </h1>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {/* Menu Card */}
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-4xl font-bold mb-1">205</div>
-                            <div className="text-purple-100 text-lg">Menu</div>
-                        </div>
-                        <div className="text-white opacity-80">
-                            <Wallet size={32} />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Shop Card */}
-                <div className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-xl p-6 text-white">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-4xl font-bold mb-1">103</div>
-                            <div className="text-orange-100 text-lg">Shop</div>
-                        </div>
-                        <div className="text-white opacity-80">
-                            <Store size={32} />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Contact Card */}
-                <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 text-white">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-4xl font-bold mb-1">03</div>
-                            <div className="text-pink-100 text-lg">Contact</div>
-                        </div>
-                        <div className="text-white opacity-80">
-                            <Phone size={32} />
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {/* Main Content Area */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Profile Section */}
-                <div className="bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl p-8">
+                <div className="rounded-xl p-8" style={{ backgroundColor: '#251212', border: '1px solid #475569' }}>
                     <div className="text-center">
                         {/* Profile Picture */}
-                        <div className="w-32 h-32 mx-auto mb-6 bg-white rounded-full border-4 border-orange-300 flex items-center justify-center">
-                            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
-                                <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+                        <div className="w-32 h-32 mx-auto mb-6 bg-white rounded-full border-4 flex items-center justify-center overflow-hidden" style={{ borderColor: '#e91710' }}>
+                            {user?.photoURL ? (
+                                <img
+                                    src={user.photoURL}
+                                    alt="User Profile"
+                                    className="w-full h-full object-cover rounded-full"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.nextElementSibling.style.display = 'flex';
+                                    }}
+                                />
+                            ) : null}
+                            {/* Fallback avatar when no photo URL */}
+                            <div 
+                                className={`w-full h-full rounded-full flex items-center justify-center ${user?.photoURL ? 'hidden' : 'flex'}`}
+                                style={{ 
+                                    display: user?.photoURL ? 'none' : 'flex',
+                                    background: 'linear-gradient(135deg, #e91710 0%, #a10909 100%)'
+                                }}
+                            >
+                                <User className="w-16 h-16 text-white" />
                             </div>
                         </div>
                         
                         {/* Name */}
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                            Awlad Hossain
+                        <h2 className="text-2xl font-bold mb-2 text-white">
+                            {(user?.displayName || user?.email?.split('@')[0] || 'User').toUpperCase()}
                         </h2>
+                        {user?.email && (
+                            <p className="text-sm" style={{ color: '#94a3b8' }}>
+                                {user.email}
+                            </p>
+                        )}
                     </div>
                 </div>
 
                 {/* Activities Section */}
-                <div className="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-xl p-8">
-                    <h3 className="text-2xl font-bold text-gray-800 mb-6">
+                <div className="rounded-xl p-8" style={{ backgroundColor: '#251212', border: '1px solid #475569' }}>
+                    <h3 className="text-2xl font-bold mb-6 text-white">
                         Your Activities
                     </h3>
                     
                     <div className="space-y-4">
                         {/* Orders */}
-                        <div className="flex items-center space-x-3">
-                            <ShoppingCart className="text-blue-500" size={20} />
-                            <span className="text-blue-500 font-semibold text-lg">
-                                Orders: 6
+                        <div className="flex items-center space-x-3 p-3 rounded-lg transition-colors hover:bg-white hover:bg-opacity-10">
+                            <ShoppingCart className="text-white" size={20} style={{ color: '#e91710' }} />
+                            <span className="font-semibold text-lg text-white">
+                                Orders: {cart.length}
                             </span>
                         </div>
 
                         {/* Reviews */}
-                        <div className="flex items-center space-x-3">
-                            <Star className="text-teal-500" size={20} />
-                            <span className="text-teal-500 font-semibold text-lg">
-                                Reviews: 2
+                        <div className="flex items-center space-x-3 p-3 rounded-lg transition-colors hover:bg-white hover:bg-opacity-10">
+                            <Star className="text-white" size={20} style={{ color: '#e91710' }} />
+                            <span className="font-semibold text-lg text-white">
+                                Reviews: {loading ? '...' : userStats.totalReviews}
                             </span>
                         </div>
 
-                        {/* Bookings */}
-                        <div className="flex items-center space-x-3">
-                            <Calendar className="text-orange-500" size={20} />
-                            <span className="text-orange-500 font-semibold text-lg">
-                                Bookings: 1
-                            </span>
-                        </div>
-
-                        {/* Payment */}
-                        <div className="flex items-center space-x-3">
-                            <CreditCard className="text-red-500" size={20} />
-                            <span className="text-red-500 font-semibold text-lg">
-                                Payment: 3
+                        {/* Payments */}
+                        <div className="flex items-center space-x-3 p-3 rounded-lg transition-colors hover:bg-white hover:bg-opacity-10">
+                            <CreditCard className="text-white" size={20} style={{ color: '#e91710' }} />
+                            <span className="font-semibold text-lg text-white">
+                                Payments: {loading ? '...' : userStats.totalPayments}
                             </span>
                         </div>
                     </div>
