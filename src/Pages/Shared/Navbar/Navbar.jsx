@@ -15,7 +15,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const [cart]=useCart();
   const [isAdmin, isAdminLoading]=useAdmin();
-  
+  console.log(user?.photoURL);
   console.log('User:', user?.email);
   console.log('Is Admin:', isAdmin);
   console.log('Admin Loading:', isAdminLoading);
@@ -192,14 +192,21 @@ const Navbar = () => {
             >
               {/* Professional Profile Picture */}
               <div className="relative">
-                <img
-                  src={user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || user?.email || 'User')}&background=F59E0B&color=fff&size=48&font-size=0.6&bold=true`}
-                  alt="User Profile"
-                  className="w-12 h-12 rounded-full object-cover shadow-lg border-2 border-amber-400/50 hover:border-amber-400 transition-all duration-300"
-                  onError={(e) => {
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || user?.email || 'User')}&background=F59E0B&color=fff&size=48&font-size=0.6&bold=true`;
-                  }}
-                />
+                {user?.photoURL ? (
+                  <img
+                    src={user?.photoURL}
+                    alt="User Profile"
+                    className="w-12 h-12 rounded-full object-cover shadow-lg border-2 border-amber-400/50 hover:border-amber-400 transition-all duration-300"
+                    
+                  />
+                ) : null}
+                {/* Fallback avatar when no photo URL */}
+                <div 
+                  className={`w-12 h-12 rounded-full shadow-lg border-2 border-amber-400/50 hover:border-amber-400 transition-all duration-300 bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center ${user?.photoURL ? 'hidden' : 'flex'}`}
+                  style={{ display: user?.photoURL ? 'none' : 'flex' }}
+                >
+                  <MdOutlineAccountCircle className="w-8 h-8 text-white" />
+                </div>
                 {/* Status indicator */}
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
               </div>

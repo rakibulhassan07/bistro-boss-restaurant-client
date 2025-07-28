@@ -198,6 +198,28 @@
   background: linear-gradient(135deg, #059669, #047857);
 }
 
+/* Admin Disabled State */
+.add-to-cart-btn.admin-disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.add-to-cart-btn.admin-disabled .btn-background {
+  background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+}
+
+.add-to-cart-btn.admin-disabled:hover {
+  transform: none;
+}
+
+.add-to-cart-btn.admin-disabled:hover .btn-background {
+  background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+}
+
+.admin-icon {
+  font-size: 1.2rem;
+}
+
 .cart-icon,
 .success-icon {
   font-size: 1.2rem;

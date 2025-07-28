@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import useCart from "../../Hook/useCart";
+import useAdmin from "../../Hook/useAdmin";
 import './AnimatedFoodCard.css';
 
 const AnimatedFoodCard = ({ item }) => {
@@ -15,9 +16,22 @@ const AnimatedFoodCard = ({ item }) => {
   const [, refatch] = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [isAdmin, isAdminLoading] = useAdmin();
 
   const handleAddToCart = async () => {
     if (user && user.email) {
+      // Check if user is admin
+      if (isAdmin) {
+        Swal.fire({
+          title: "Access Restricted!",
+          text: "Admins cannot purchase food items. This feature is only available for customers.",
+          icon: "info",
+          confirmButtonText: "Understood",
+          confirmButtonColor: "#3085d6",
+        });
+        return;
+      }
+      
       setIsLoading(true);
       const cartItem = {
         menuId: _id,
@@ -90,11 +104,19 @@ const AnimatedFoodCard = ({ item }) => {
           <div className="card-actions">
             <button
               onClick={handleAddToCart}
-              disabled={isLoading}
-              className={`add-to-cart-btn ${isLoading ? 'loading' : ''} ${isAdded ? 'added' : ''}`}
+              disabled={isLoading || (user && isAdmin)}
+              className={`add-to-cart-btn ${isLoading ? 'loading' : ''} ${isAdded ? 'added' : ''} ${
+                user && isAdmin ? 'admin-disabled' : ''
+              }`}
+              title={user && isAdmin ? "Admins cannot purchase food items" : "Add to cart"}
             >
               <span className="btn-content">
-                {isLoading ? (
+                {user && isAdmin ? (
+                  <>
+                    <span className="admin-icon">👨‍💼</span>
+                    <span>ADMIN - CANNOT PURCHASE</span>
+                  </>
+                ) : isLoading ? (
                   <>
                     <div className="spinner"></div>
                     <span>Adding...</span>

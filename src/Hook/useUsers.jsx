@@ -8,7 +8,7 @@ const useUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/users");
+        const response = await fetch("hhttp://localhost:5000/users");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

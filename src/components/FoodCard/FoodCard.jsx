@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
 import useCart from "../../Hook/useCart";
+import useAdmin from "../../Hook/useAdmin";
 
 const FoodCard = ({ item }) => {
   const { image, recipe, name, price,_id } = item;
@@ -13,8 +14,22 @@ const FoodCard = ({ item }) => {
   const axiosSecure =useAxiosSecure()
   const navigate = useNavigate();
   const [, refatch] = useCart();
+  const [isAdmin, isAdminLoading] = useAdmin();
+  
   const handleAddToCart = () => {
     if (user && user.email) {
+      // Check if user is admin
+      if (isAdmin) {
+        Swal.fire({
+          title: "Access Restricted!",
+          text: "Admins cannot purchase food items. This feature is only available for customers.",
+          icon: "info",
+          confirmButtonText: "Understood",
+          confirmButtonColor: "#3085d6",
+        });
+        return;
+      }
+      
        const cartItem={
         menuId:_id,
         email:user.email,
@@ -71,9 +86,15 @@ const FoodCard = ({ item }) => {
         <div className="card-actions mt-4">
           <button
             onClick={handleAddToCart}
-            className="btn btn-outline btn-warning w-full"
+            disabled={isAdminLoading}
+            className={`btn btn-outline w-full ${
+              user && isAdmin 
+                ? 'btn-disabled bg-gray-200 text-gray-500 cursor-not-allowed' 
+                : 'btn-warning'
+            }`}
+            title={user && isAdmin ? "Admins cannot purchase food items" : "Add to cart"}
           >
-            ADD TO CART
+            {user && isAdmin ? "ADMIN - CANNOT PURCHASE" : "ADD TO CART"}
           </button>
         </div>
       </div>

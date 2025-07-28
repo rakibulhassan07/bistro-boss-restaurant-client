@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.1.6",
     "@tanstack/react-query": "^5.77.2",
     "axios": "^1.9.0",
+    "crypto-js": "^4.2.0",
     "firebase": "^11.8.0",
     "framer-motion": "^12.12.1",
     "localforage": "^1.10.0",
@@ -47,6 +48,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "terser": "^5.43.1",
     "vite": "^6.3.5"
   }
 }
