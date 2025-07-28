@@ -180,17 +180,7 @@ const Dashboard = () => {
                 <span className="nav-text">MENU</span>
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/shop"
-                className={({ isActive }) =>
-                  `nav-link ${isActive ? "nav-link-active" : ""}`
-                }
-              >
-                <ShoppingBag size={18} className="nav-icon" />
-                <span className="nav-text">SHOP</span>
-              </NavLink>
-            </li>
+            
             <li>
               <NavLink
                 to="/contact"

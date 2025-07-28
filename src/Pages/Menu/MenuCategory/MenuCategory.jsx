@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 const MenuCategory = ({items,title,img}) => {
   return (
     <div className="pt-4 md:pt-8">
-        {title && <Cover img={img} title={title}></Cover>}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 my-8 md:my-16 px-4 md:px-8">
         {items.map((item) => (
           <MenuItem key={item._id} item={item}></MenuItem>
